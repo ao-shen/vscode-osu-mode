@@ -50,6 +50,11 @@ export class ComboMeter implements Plugin {
         vscode.window.onDidChangeTextEditorVisibleRanges((e: vscode.TextEditorVisibleRangesChangeEvent) => {
             this.updateDecorations(e.textEditor);
         });
+
+        /*if(this.orange) {
+        } else {
+            this.orange = vscode.window.createOutputChannel("Orange");
+        }*/
     }
 
     dispose = () => {
@@ -159,21 +164,12 @@ export class ComboMeter implements Plugin {
 
         const imgUrl = imgIdx === -1 ? "" : comboImages[imgIdx];
 
-        /*if(this.orange) {
-        } else {
-            this.orange = vscode.window.createOutputChannel("Orange");
-        }
-        this.orange.appendLine(`imgUrl: ${imgUrl}`);
-        this.orange.appendLine(`count: ${count}`);
-        this.orange.appendLine(`styleCount: ${styleCount}`);*/
-
         if(this.renderedImageCount != imageCount) {
             this.renderedImageCount = imageCount;
 
             const thisObj = this;
 
             let animateComboImageDecoration = function(frameCount: number) {
-                thisObj.comboTitleDecoration && thisObj.comboTitleDecoration.dispose();
 
                 let posX = 0;
                 let delay = 10;
@@ -206,7 +202,7 @@ export class ComboMeter implements Plugin {
         
                 const titleCss = ComboMeter.objectToCssString(backgroundImageCss);
         
-                thisObj.comboTitleDecoration = vscode.window.createTextEditorDecorationType({
+                let newComboTitleDecoration = vscode.window.createTextEditorDecorationType({
                     // Title and Count cannot use the same pseudoelement
                     before: {
                         contentText: "",
@@ -216,7 +212,10 @@ export class ComboMeter implements Plugin {
                     rangeBehavior: vscode.DecorationRangeBehavior.ClosedClosed,
                 });
                 
-                editor.setDecorations(thisObj.comboTitleDecoration, ranges);
+                editor.setDecorations(newComboTitleDecoration, ranges);
+                
+                thisObj.comboTitleDecoration && thisObj.comboTitleDecoration.dispose();
+                thisObj.comboTitleDecoration = newComboTitleDecoration;
 
                 if(frameCount < 150) {
                     thisObj.comboImageAnimationTimer = setTimeout(()=>{
@@ -235,7 +234,6 @@ export class ComboMeter implements Plugin {
         const thisObj = this;
 
         let animateComboCountDecoration = function(frameCount: number) {
-            thisObj.comboCountDecoration && thisObj.comboCountDecoration.dispose();
 
             const styleCount = count > 100 ? 100 : count;
             const styleColor = 'hsl(' + (100 - count * 1.2) + ', 100%, 45%)';
@@ -248,7 +246,7 @@ export class ComboMeter implements Plugin {
                 ["text-shadow"]: `0px 0px 15px ${styleColor}`,
             });
     
-            thisObj.comboCountDecoration = vscode.window.createTextEditorDecorationType({
+            let newComboCountDecoration = vscode.window.createTextEditorDecorationType({
                 // Title and Count cannot use the same pseudoelement
                 after: {
                     margin: ".8em 0 0 0",
@@ -259,7 +257,10 @@ export class ComboMeter implements Plugin {
                 rangeBehavior: vscode.DecorationRangeBehavior.ClosedClosed,
             });
 
-            editor.setDecorations(thisObj.comboCountDecoration, ranges);
+            editor.setDecorations(newComboCountDecoration, ranges);
+
+            thisObj.comboCountDecoration && thisObj.comboCountDecoration.dispose();
+            thisObj.comboCountDecoration = newComboCountDecoration
 
             if(frameCount < 100) {
                 thisObj.comboCountAnimationTimer = setTimeout(()=>{

@@ -131,6 +131,11 @@ function isOsumode() {
 
 let timer: NodeJS.Timeout;
 function onDidChangeTextDocument(event: vscode.TextDocumentChangeEvent) {
+
+    if(event.document != vscode.window.activeTextEditor.document) {
+        return;
+    }
+
     if(deleteResetsCombo) {
         timer = setTimeout(() => {
             onComboEnd()

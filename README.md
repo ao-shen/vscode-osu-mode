@@ -42,6 +42,8 @@ You can also specify custom images to use instead of default ones. Change `"osum
 * Thanks to [@hoovercj](https://github.com/hoovercj) for [Powermode](https://github.com/hoovercj/vscode-power-mode)
 
 ## Changelog:
+- v3.3.0
+  - Fixed flickering bug!
 - v3.2.3
   - Updated name to OSU MODE 3!
   - Did I actually change anything? No. So why? You know, 3 is such a cool number. In fact, I would even say it's greater than 2.
